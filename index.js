@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 const todoHandler = require("./routeHandler/todoHandler");
 const mongoose = require("mongoose");
-
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 
 //connecting with mongoose
 mongoose.connect("mongodb://localhost/todo")

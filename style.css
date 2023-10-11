@@ -1,0 +1,8 @@
+.notes {
+    padding: 2px;
+    transition: box-shadow 0.3s ease; /* Adding a transition for a smoother effect */
+  }
+  
+  .notes:hover {
+    box-shadow: 0 0 10px rgba(34, 142, 214, 0.5); /* Adding a glow effect on hover */
+  }

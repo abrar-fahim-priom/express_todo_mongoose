@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Item</title>
+</head>
+
+<body>
+    <form>
+        <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter title">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Status:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="active" value="active">
+                <label class="form-check-label" for="active">Active</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="inactive" value="inactive">
+                <label class="form-check-label" for="inactive">Inactive</label>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+    </form>
+
+    <script>
+        var titleV, descriptionV, statusV, _id; // Declare the variables in a broader scope
+
+        function getQueryParameters() {
+            var params = new URLSearchParams(window.location.search);
+            var title = params.get("title");
+            var description = params.get("description");
+            var status = params.get("status");
+            _id = params.get("_id");
+
+            // Populate the form fields
+            document.getElementById("title").value = title;
+            document.getElementById("description").value = description;
+
+            // Check the appropriate radio button based on the status value
+            if (status === "active") {
+                statusV = "active";
+                document.getElementById("active").checked = true;
+            } else if (status === "inactive") {
+                statusV = "inactive";
+                document.getElementById("inactive").checked = true;
+            }
+        }
+
+        function submitUpdatedOne() {
+            titleV = document.getElementById("title").value;
+            descriptionV = document.getElementById("description").value;
+            statusV = document.querySelector('input[name="status"]:checked').value;
+            var params = new URLSearchParams(window.location.search);
+            _id = params.get("_id");
+
+            var updateDataObj = {
+                title: titleV,
+                description: descriptionV,
+                status: statusV,
+                _id: _id,
+            }
+
+            console.log(updateDataObj);
+
+            // Sending data to the server
+            updateData(`http://localhost:3000/todo/${_id}`, updateDataObj);
+        }
+
+        window.onload = function () {
+            getQueryParameters();
+            const submitButton = document.getElementById("submitButton");
+            submitButton.addEventListener("click", submitUpdatedOne);
+        }
+
+        async function updateData(url, data) {
+            try {
+                console.log(data);
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Data sent successfully:', responseData);
+
+                // Redirect to the index page on success
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -19,7 +19,7 @@ mongoose.connect("mongodb://localhost/todo")
     })
     .catch((err) => console.error(err));
 
-//creating routes
+//hitting /todo will take to todoHandler route
 app.use("/todo",todoHandler);
 
 

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router(); //Creating the sub app //passing as todoHandler
 const todoSchema = require("../Schemas/todoSchema"); //for model
 const mongoose = require("mongoose");
+router.use(express.json());
 
 const TODO = new mongoose.model("TODO", todoSchema);
 
@@ -50,15 +51,22 @@ router.post("/all", async (req, res) => {
 //put todo for updating
 router.put("/:id", async (req, res) => {
   try {
+    const id = req.params.id;
+    console.log(req.body);
+   
+
+    // Update your TODO document using the data from the request body
     await TODO.updateOne(
-      { _id: req.params.id },
+      { _id: id },
       {
         $set: {
-          title: "All quiet on the western front",
-          status: "inactive",
+          title: req.body.title,
+          status: req.body.status,
+          description: req.body.description,
         },
       }
     );
+
     res.status(201).json({ message: "Data Updated successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });

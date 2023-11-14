@@ -20,10 +20,17 @@
     </div>
 
     <script>
+        const accessToken = localStorage.getItem('accessToken');
         loadNotes();
 
         async function loadNotes() {
-            const response = await fetch('http://localhost:3000/todo/');
+            const response = await fetch('http://localhost:3000/todo/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}` // Include the access token
+            },
+            
+        });
             const data = await response.json();
             console.log(data);
             processData(data);

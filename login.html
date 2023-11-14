@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Login Form</title>
+    
+    <!-- Include Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Login</h5>
+                        <form id="loginForm" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+                            </div>
+                            <div class="mb-3">
+                                <label for "password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="loginButton">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS from CDN (optional, not required for the form) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+        
+            loginForm.addEventListener('submit', async function (event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+        
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+        
+                // Create a data object to send in the request
+                const data = {
+                    username: username,
+                    password: password
+                };
+        
+                try {
+                    const response = await fetch('http://localhost:3000/user/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+        
+                    if (response.ok) {
+                        const responseData = await response.json();
+        
+                        if (responseData.acces_token) {
+                            // Login successful, you can handle the token here
+                            console.log('Login successful');
+                            console.log('Access Token:', responseData.acces_token);
+                            localStorage.setItem('accessToken', responseData.acces_token);
+                             window.location.href = 'index.html';
+                            // You can redirect to a different page or perform other actions here
+                        } else {
+                            // Handle authentication error
+                            console.error('Authentication error:', responseData.error);
+                        }
+                    } else {
+                        console.error('An error occurred:', response.status, response.statusText);
+                    }
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            });
+        });
+        </script>
+        
+</body>
+</html>

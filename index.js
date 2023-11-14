@@ -1,13 +1,16 @@
 const express = require("express");
 const app = express();
 const todoHandler = require("./routeHandler/todoHandler");
+const userHandler = require("./routeHandler/userHandler");
 const mongoose = require("mongoose");
 const cors = require('cors');
+const dotenv = require("dotenv");
 
 app.use(express.json());
 app.use(cors());
+dotenv.config();
 
-//connecting with mongoose
+//connecting with mongoose  //
 mongoose.connect("mongodb://localhost/todo")
     .then(() => {
         console.log("Connection to MongoDB successful");
@@ -21,7 +24,7 @@ mongoose.connect("mongodb://localhost/todo")
 
 //hitting /todo will take to todoHandler route
 app.use("/todo",todoHandler);
-
+app.use("/user",userHandler);
 
 
 

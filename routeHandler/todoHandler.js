@@ -2,14 +2,16 @@ const express = require("express");
 const router = express.Router(); //Creating the sub app //passing as todoHandler
 const todoSchema = require("../Schemas/todoSchema"); //for model
 const mongoose = require("mongoose");
+const checkLogin = require("../middlewares/checkLogin");
 router.use(express.json());
 
 const TODO = new mongoose.model("TODO", todoSchema);
 
 //GET ALL THE TODOS
-router.get("/", async (req, res) => {
+router.get("/",checkLogin, async (req, res) => {
   try {
     const result = await TODO.find(); 
+    console.log(result);
     res.status(201).json({ message: result });
   } catch (error) {
     res.status(500).json({ error: error.message });
